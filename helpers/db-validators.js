@@ -25,7 +25,7 @@ const existeEmail = async (correo = '') => {
 const existeUsuarioPorId = async (id = '') => {   
     const esMongoID = isValidObjectId(id); 
     if (esMongoID) {
-        console.log(`El id: ${id} es valido`);
+        //console.log(`El id: ${id} es valido`);
         // id valido
         return `El id: ${id} es valido`;
     } else {
