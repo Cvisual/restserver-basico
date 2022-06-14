@@ -1,7 +1,8 @@
 const { isValidObjectId } = require("mongoose");
+const { Inmueble,Usuario } = require("../models");
 
 const Role = require('../models/role');
-const Usuario = require('../models/usuario');
+
 
 // Verificar si el rol es valido
 const esRoleValido = async (rol = '') => {
@@ -36,8 +37,32 @@ const existeUsuarioPorId = async (id = '') => {
     }
 }
 
+// Verificar si el inmueble existe
+const existeInmueblePorId = async (id = '') => {   
+    // Verificar si el inmueble existe    
+    const existeInmueble = await Inmueble.findById(id);  
+    if( !existeInmueble ) {
+        throw new Error(`El id no existe: ${id}`);
+    }    
+}
+
+// Varificar la colecciones permitidad
+const coleccionesPermitidas =  ( collection = '', colecciones = []) =>{
+
+    const incluida = colecciones.includes(collection);
+    if (!incluida) {
+        throw new Error(`La coleccion ${collection} no es permitidad ${colecciones}`);
+    }
+
+    return true;
+
+}
+
+
 module.exports = {
     esRoleValido,
     existeEmail,
-    existeUsuarioPorId
+    existeUsuarioPorId,
+    existeInmueblePorId,
+    coleccionesPermitidas
 }

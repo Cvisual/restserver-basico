@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors');
 const dbConnection = require('../database/config');
+const fileUpload = require('express-fileupload');
 
 class Server{
 
@@ -10,9 +11,14 @@ class Server{
         this.app.use( express.json() );
         //Lectura de variables en el archivo .env
         this.port = process.env.PORT;
-        
-        this.usuariosPath = '/api/usuarios';
-        this.authPath = '/api/auth';
+
+
+        this.paths = {
+            auth:       '/api/auth',
+            usuarios:   '/api/usuarios',
+            inmuebles:  '/api/inmuebles',
+            uploads:    '/api/uploads'
+        }
 
         // conectar a base de datos
         this.conectarDB();
@@ -37,13 +43,22 @@ class Server{
 
         //Directorio publico
         this.app.use( express.static('public') );
+
+        // Fileupload -  Carga de archivos
+        this.app.use(fileUpload({
+            useTempFiles : true,
+            tempFileDir : '/tmp/',
+            createParentPath: true
+        }));
     }
 
     
     routes() {
        
-        this.app.use( this.authPath, require('../routes/auth') );
-        this.app.use( this.usuariosPath, require('../routes/usuarios') );
+        this.app.use( this.paths.auth, require('../routes/auth') );
+        this.app.use( this.paths.usuarios, require('../routes/usuarios') );
+        this.app.use( this.paths.inmuebles, require('../routes/inmuebles') );
+        this.app.use( this.paths.uploads, require('../routes/uploads') );
 
     }
 
